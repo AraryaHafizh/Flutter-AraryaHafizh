@@ -47,7 +47,7 @@ void factor(int num) {
       factors.add(i);
     }
   }
-  print(factors);
+  print('\n$factors');
 }
 
 void main() {
