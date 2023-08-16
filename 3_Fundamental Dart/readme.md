@@ -1,0 +1,2 @@
+# Rangkuman Hari Ini
+Hari ini ktia mempelajari Git, mulai dari pengenalan apa itu Git, _set-up_ pertama kai, dan bagaimana cara mengguanakn Git pada project kita. Diakhir pembelajaran kita diberi _task_ untuk mencba apa yang telah kita pelajari.
