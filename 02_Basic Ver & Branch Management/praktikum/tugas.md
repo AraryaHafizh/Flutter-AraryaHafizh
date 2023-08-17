@@ -10,7 +10,7 @@
 jawaban:
 
 1. <div style="text-align: center;">
-       <img src="../screenshots/nama repo.png" alt="folder" width="450" style="display: block; margin: 0 auto;">
+       <img src="../screenshots/nama repo.png" alt="nama repo" width="450" style="display: block; margin: 0 auto;">
       </div>
    <!---->
 2. <div style="text-align: center;">
@@ -18,7 +18,7 @@ jawaban:
       </div>
    <!---->
 3. <div style="text-align: center;">
-    <img src="../screenshots/subfolder.png" alt="folder" width="450" style="display: block; margin: 0 auto;">
+    <img src="../screenshots/subfolder.png" alt="subfolder" width="450" style="display: block; margin: 0 auto;">
    </div>
 
 ## Soal Prioritas 2
@@ -39,13 +39,17 @@ jawaban:
 jawaban:
 
 <div style="text-align: center;">
-    <img src="../screenshots/conflict.png" alt="folder" width="400" style="display: block; margin: 0 auto;">
+    <img src="../screenshots/branch.png" alt="branch" width="400" style="display: block; margin: 0 auto;">
 </div>
 <!---->
 <div style="text-align: center;">
-    <img src="../screenshots/conflict2.png" alt="folder" width="400" style="display: block; margin: 0 auto;">
+    <img src="../screenshots/conflict.png" alt="conflict" width="400" style="display: block; margin: 0 auto;">
 </div>
 <!---->
 <div style="text-align: center;">
-    <img src="../screenshots/conflict3.png" alt="folder" width="400" style="display: block; margin: 0 auto;">
+    <img src="../screenshots/conflict2.png" alt="conflict2" width="400" style="display: block; margin: 0 auto;">
+</div>
+<!---->
+<div style="text-align: center;">
+    <img src="../screenshots/conflict3.png" alt="conflict3" width="400" style="display: block; margin: 0 auto;">
 </div>
