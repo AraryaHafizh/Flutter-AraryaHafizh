@@ -1,3 +1,3 @@
 void main() {
-  String kata = 'hello';
+  String nama = 'nama';
 }
