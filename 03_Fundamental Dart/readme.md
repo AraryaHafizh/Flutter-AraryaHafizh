@@ -1,2 +1,2 @@
 # Rangkuman Hari Ini
-Hari ini ktia mempelajari Git, mulai dari pengenalan apa itu Git, _set-up_ pertama kai, dan bagaimana cara mengguanakn Git pada project kita. Diakhir pembelajaran kita diberi _task_ untuk mencba apa yang telah kita pelajari.
+Pada bab ini kita mempelajari _fundamental Dart_, mulai dari pengenalan apa itu dart, syntax basic dart, dan contoh penggunaan dart. Dakhir pembelajaran ini kita diberi _task_ yang dikumpulkan di GitHub.
