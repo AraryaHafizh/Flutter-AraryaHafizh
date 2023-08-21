@@ -64,8 +64,8 @@ void main() {
   String c = 'pagi!';
   sambung_kata(a, b, c);
   vol_silinder(3, 10);
-  is_palindrome('kasur rusak');
-  is_palindrome('mobil balap');
+  is_palindrome('kasur rusak'.toLowerCase());
+  is_palindrome('mobil balap'.toLowerCase());
   factor(24);
 }
 
