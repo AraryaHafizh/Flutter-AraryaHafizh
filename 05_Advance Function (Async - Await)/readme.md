@@ -1,1 +1,2 @@
 # Rangkuman Hari Ini
+Pada bab ini kita belajar mengenai advance function, async, await, dan collection pada dart. Pembelajaran dilakukan secara asynchronous lewat website _one-alta_. Diakhir pembelaran kita mengerjakan quiz dan latihan.
