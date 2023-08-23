@@ -1,14 +1,5 @@
 import 'dart:math';
 
-//-----------------prioritas 1-----------------
-List<dynamic> pengkali(list, int pengkali) {
-  List<int> output = [];
-  for (int i = 0; i < list.length; i++) {
-    output.add(list[i] * pengkali);
-  }
-  return [list, output];
-}
-
 //-----------------prioritas 2-----------------
 List<dynamic> listmap() {
   List<List<dynamic>> listinList = [
@@ -57,9 +48,7 @@ List<dynamic> freq(input) {
 }
 
 void main() {
-  var soal1 = pengkali([2, 4, 6, 8], 2);
-  print('list awal : ${soal1[0]}\nlist hasil: ${soal1[1]}');
-  print('--------------');
+  
   var soal2 = listmap();
   print('List didalam list: ${soal2[0]}\nList to map      : ${soal2[1]}\n');
   var soal3 = pembulatan([7, 5, 3, 5, 2, 1]);
