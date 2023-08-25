@@ -1,5 +1,3 @@
-import 'dart:math';
-
 //-----------------prioritas 2-----------------
 List<dynamic> listmap() {
   List<List<dynamic>> listinList = [
