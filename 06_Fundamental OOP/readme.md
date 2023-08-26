@@ -1,1 +1,2 @@
 # Rangkuman Hari Ini
+Hari ini kita belajar mengenai _fundamental OOP_ di dart. Kita belajar melewati website alta, setelah selesai dengan pembahasan materi kita mengerjakan quiz di web dan tugas yang nanti di kumpulkan di GitHub.
