@@ -1,1 +1,2 @@
 # Rangkuman Hari Ini
+Pada bab ini kita belajar lebih dalam mengenai OOP di dart. Kita belajar constructor, inheritance, method overriding, interface, abstract class, polymorphism, dan generics. Di akhir pembelajaran kita diberi tugas yang nanti di kumpul di GitHub.
