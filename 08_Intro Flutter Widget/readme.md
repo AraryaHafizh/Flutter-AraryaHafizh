@@ -1,1 +1,2 @@
 # Rangkuman Hari Ini
+Pada Bab ini kita berkenalan dengan flutter, mentor memberikan pembuka apa itu flutter, langkah - langkah pertama untuk memulai membuat project flutter dan penjelasan structure folder pada flutter.
