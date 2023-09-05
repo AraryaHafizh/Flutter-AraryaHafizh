@@ -137,7 +137,7 @@ class Rectangle implements Shape {
 
 void main() {
   var kubus1 = Kubus(5);
-  var balok1 = Balok(5, 4, 2);
+  var balok1 = BangunRuang(5, 4, 2);
   kubus1.volume();
   balok1.volume();
   print('');
