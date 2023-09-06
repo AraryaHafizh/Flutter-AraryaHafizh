@@ -1,0 +1,47 @@
+// .txt karena menghindari error.
+
+import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const CupertinoApp(
+      title: 'Flutter Demo',
+      theme: CupertinoThemeData(),
+      home: HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int currentPageIndex = 0;
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: const Text('CupertinoApp'),
+      ),
+      child: tulisanView(),
+    );
+  }
+
+  Widget tulisanView() {
+    return const Center(
+      child: Text('This is Cupertino App'),
+    );
+  }
+}

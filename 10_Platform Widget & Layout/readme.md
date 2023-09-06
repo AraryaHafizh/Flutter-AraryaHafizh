@@ -1,1 +1,2 @@
 # Rangkuman Hari Ini
+Pada bab ini kita belajar bagaimana menggunakan appbar, body, listview, drawer, floating action button, dan navigation bar. Kita juga belajar bagaimana menggunakan _MaterialApp_ dan _CupertinoApp_.
