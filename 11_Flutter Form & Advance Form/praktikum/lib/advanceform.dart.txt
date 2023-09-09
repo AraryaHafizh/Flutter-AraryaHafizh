@@ -1,0 +1,189 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:file_picker/file_picker.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(255, 152, 83, 231)),
+        useMaterial3: true,
+      ),
+      home: const AdvanceForm(),
+    );
+  }
+}
+
+class AdvanceForm extends StatefulWidget {
+  const AdvanceForm({super.key});
+
+  @override
+  State<AdvanceForm> createState() => _AdvanceFormState();
+}
+
+class _AdvanceFormState extends State<AdvanceForm> {
+  DateTime date = DateTime.now();
+  Color userColor = Colors.blue;
+
+  void changeColor(Color color) {
+    setState(() => userColor = color);
+  }
+
+  FilePickerResult? result;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: showAppBar(),
+      body: homeScreen(),
+    );
+  }
+
+  showAppBar() {
+    return AppBar(
+      title: Text('Interactive Widgets'),
+    );
+  }
+
+  Widget homeScreen() {
+    return Column(
+      children: [
+        datePicker(),
+        colorPicker(),
+        filePicker(),
+      ],
+    );
+  }
+
+  // ----------- date picker handler -----------
+
+  Widget datePicker() {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Date Picker'),
+                  Text('${date.day}.${date.month}.${date.year}')
+                ],
+              ),
+              const Spacer(),
+              TextButton(
+                  onPressed: () async {
+                    DateTime? selectedDate = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2222));
+
+                    if (selectedDate == null) return;
+                    setState(() {
+                      date = selectedDate;
+                    });
+                  },
+                  child: const Text('Select Date')),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  // ----------- color picker handler -----------
+
+  Widget colorPicker() {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Color Picker'),
+          Container(width: double.infinity, height: 200, color: userColor),
+          Center(
+            child: TextButton(
+                onPressed: () {
+                  colorPickerHandler();
+                },
+                child: const Text('Select Color')),
+          )
+        ],
+      ),
+    );
+  }
+
+  colorPickerHandler() {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Pick a color'),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: userColor,
+              onColorChanged: (Color color) {
+                setState(() {
+                  userColor = color;
+                });
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Pick!'))
+          ],
+        );
+      },
+    );
+  }
+
+  // ----------- file picker handler -----------
+
+  Widget filePicker() {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('File Picker'),
+          Text('${result?.names}'),
+          Center(
+              child: TextButton(
+                  onPressed: () async {
+                    result = await FilePicker.platform
+                        .pickFiles(allowMultiple: true);
+                    if (result == null) {
+                      debugPrint("No file selected");
+                    } else {
+                      setState(() {});
+                      result?.files.forEach((element) {
+                        debugPrint(element.name);
+                      });
+                    }
+                  },
+                  child: const Text('Pick a file')))
+        ],
+      ),
+    );
+  }
+
+  
+}

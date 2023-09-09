@@ -1,0 +1,568 @@
+import 'package:ararya_hafizh/style.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:file_picker/file_picker.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: const HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final TextEditingController _usernameInput = TextEditingController();
+  final TextEditingController _numberInput = TextEditingController();
+  final TextEditingController _dobInput = TextEditingController();
+  final TextEditingController _colorInput = TextEditingController();
+  final TextEditingController _fileInput = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  FilePickerResult? selectedFile;
+  Color userColor = Colors.white;
+  int currentPageIndex = 0;
+
+  List<List<dynamic>> contacts = [
+    ['Adi Makmur', '081212345678', 'Jan 28', Color(0xffea1919), ''],
+    ['Budi Santono', '085134567665', 'Feb 13', Color(0xffffffff), ''],
+  ];
+
+  @override
+  void dispose() {
+    _usernameInput.dispose();
+    _numberInput.dispose();
+    _dobInput.dispose();
+    _colorInput.dispose();
+    _fileInput.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: <Widget>[
+        groupOne(),
+        contactList(),
+      ][currentPageIndex],
+      bottomNavigationBar: navBar(),
+    );
+  }
+
+  // ---------- group one ----------
+
+  Widget groupOne() {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          greet(),
+          underLine(),
+          inputField(),
+          submitIt(),
+        ],
+      ),
+    );
+  }
+
+  // ---------- greeting for user ----------
+
+  Widget greet() {
+    return Container(
+      margin: const EdgeInsets.only(top: 81, left: 40, right: 40, bottom: 15),
+      child: Column(
+        children: [
+          Image.asset('assets/images/mobile_friendly.png'),
+          const SizedBox(
+            height: 16,
+          ),
+          Text(
+            'Create New Contacts',
+            style: roboto.copyWith(
+              fontSize: 24,
+            ),
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          Text(
+            'A dialog is a type of modal window that appears in front of app content to provide critical information, or prompt for a decision to be made. ',
+            style: roboto.copyWith(fontSize: 14),
+          )
+        ],
+      ),
+    );
+  }
+
+  // ---------- aesthetic underline ----------
+
+  Widget underLine() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 40),
+      decoration: const BoxDecoration(
+          border: Border(bottom: BorderSide(color: Colors.black26))),
+    );
+  }
+
+  // ---------- user input handler ----------
+
+  Widget inputField() {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 15, left: 16, right: 16),
+            child: TextFormField(
+              controller: _usernameInput,
+              decoration: const InputDecoration(
+                filled: true,
+                fillColor: Color.fromARGB(255, 231, 224, 236),
+                labelText: 'Name',
+                hintText: 'Insert Your Name',
+              ),
+              //  name validator handler
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Nama harus diisi!';
+                }
+                final words = value.split(' ');
+                if (words.length < 2) {
+                  return 'Nama harus terdiri dari 2 kata!';
+                }
+                for (final word in words) {
+                  if (!RegExp(r'^[A-Z][a-z]*$').hasMatch(word)) {
+                    return 'Nama harus diawali dengan kapital!';
+                  }
+                }
+                return null;
+              },
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.only(top: 15, left: 16, right: 16),
+            child: TextFormField(
+              controller: _numberInput,
+              keyboardType: TextInputType.phone,
+              decoration: const InputDecoration(
+                filled: true,
+                fillColor: Color.fromARGB(255, 231, 224, 236),
+                labelText: 'Nomor',
+                hintText: '+62 ....',
+              ),
+              //  number validator handler
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Nomor telepon harus diisi!';
+                }
+                if (!RegExp(r'^0[0-9]{7,14}$').hasMatch(value)) {
+                  return 'Nomor telepon tidak valid!';
+                }
+                return null;
+              },
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.only(top: 15, left: 16, right: 16),
+            child: TextFormField(
+              controller: _dobInput,
+              keyboardType: TextInputType.datetime,
+              decoration: const InputDecoration(
+                filled: true,
+                fillColor: Color.fromARGB(255, 231, 224, 236),
+                labelText: 'Date of Birth',
+                hintText: 'day.month',
+              ),
+              //  number validator handler
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'DoB harus diisi!';
+                }
+                return null;
+              },
+              onTap: () async {
+                FocusScope.of(context).requestFocus(FocusNode());
+                DateTime? selectedDate = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime(2222),
+                );
+                if (selectedDate == null) return;
+                setState(() {
+                  _dobInput.text = DateFormat.MMMd().format(selectedDate);
+                });
+              },
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.only(top: 15, left: 16, right: 16),
+            child: TextFormField(
+              controller: _colorInput,
+              keyboardType: TextInputType.none,
+              decoration: const InputDecoration(
+                filled: true,
+                fillColor: Color.fromARGB(255, 231, 224, 236),
+                labelText: 'Favorite Color',
+                hintText: '',
+              ),
+              onTap: () {
+                colorPickerHandler(context);
+                setState(() {
+                  _colorInput.text = userColor.toString();
+                });
+              },
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.only(top: 15, left: 16, right: 16),
+            child: TextFormField(
+              controller: _fileInput,
+              keyboardType: TextInputType.none,
+              decoration: const InputDecoration(
+                filled: true,
+                fillColor: Color.fromARGB(255, 231, 224, 236),
+                labelText: 'Import File',
+                hintText: '',
+              ),
+              onTap: () async {
+                selectedFile =
+                    await FilePicker.platform.pickFiles(allowMultiple: false);
+                setState(() {
+                  _fileInput.text = selectedFile!.names.toString();
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ---------- color picker handler ----------
+
+  colorPickerHandler(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Pick a color'),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: userColor,
+              onColorChanged: (Color selectedColor) {
+                setState(() {
+                  userColor = selectedColor;
+                });
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Pick!'))
+          ],
+        );
+      },
+    );
+  }
+
+  // ---------- submit button handler ----------
+
+  Widget submitIt() {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Container(
+        margin: const EdgeInsets.only(top: 15, right: 16),
+        child: ElevatedButton(
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              storedata();
+              debugPrint(_usernameInput.text);
+              debugPrint(_numberInput.text);
+              debugPrint(_dobInput.text);
+              debugPrint(_colorInput.text);
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromARGB(255, 103, 80, 164),
+          ),
+          child: Text(
+            'Submit',
+            style: roboto.copyWith(fontSize: 14, color: white),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ---------- save user input handler ----------
+
+  void storedata() {
+    String name = _usernameInput.text;
+    String number = _numberInput.text;
+    String dob = _dobInput.text;
+    Color favColor = userColor;
+    String file = _fileInput.text;
+    setState(() {
+      contacts.add([name, number, dob, favColor, file]);
+    });
+    _usernameInput.clear();
+    _numberInput.clear();
+    _dobInput.clear();
+    _colorInput.clear();
+    _fileInput.clear();
+  }
+
+  // ---------- show contactCard handler ----------
+
+  Widget contactList() {
+    return Container(
+      margin: const EdgeInsets.only(top: 81, left: 16, right: 16),
+      child: Column(
+        children: [
+          Text(
+            'List Contacts',
+            style: roboto.copyWith(fontSize: 24),
+          ),
+          const SizedBox(height: 25),
+          underLine(),
+          const SizedBox(height: 25),
+          Expanded(
+            child: ListView.builder(
+              itemCount: contacts.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: contactCard(contacts[index], index),
+                );
+              },
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ---------- contact card maker ----------
+
+  Widget contactCard(data, idx) {
+    return Container(
+      margin: const EdgeInsets.only(left: 16, right: 18),
+      child: Row(
+        children: [
+          CircleAvatar(
+            child: Text(data[0][0].toUpperCase(),
+                style: roboto.copyWith(fontSize: 16)),
+          ),
+          const SizedBox(
+            width: 16,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                data[0],
+                style: roboto.copyWith(fontSize: 16),
+              ),
+              Text(
+                data[1],
+                style: roboto.copyWith(fontSize: 12),
+              ),
+              Text(
+                'DoB: ${data[2]}',
+                style: roboto.copyWith(fontSize: 12),
+              ),
+              Row(
+                children: [
+                  Text(
+                    'Favorite Color:',
+                    style: roboto.copyWith(fontSize: 12),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Container(
+                    height: 15,
+                    width: 15,
+                    color: data[3],
+                  )
+                ],
+              ),
+              Text(
+                data[4],
+                style: roboto.copyWith(fontSize: 12),
+              )
+            ],
+          ),
+          const Spacer(),
+          IconButton(
+              onPressed: () {
+                editMode(data);
+              },
+              icon: Image.asset('assets/images/edit.png')),
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  contacts.removeAt(idx);
+                });
+              },
+              icon: Image.asset('assets/images/trash.png')),
+        ],
+      ),
+    );
+  }
+
+  // ---------- edit existing contact handler ----------
+
+  editMode(data) async {
+    String name = data[0];
+    String number = data[1];
+
+    String copyName = name;
+    String copyNumber = number;
+
+    TextEditingController newName = TextEditingController();
+    TextEditingController newNumber = TextEditingController();
+
+    bool isEdited = await showDialog(
+      context: context,
+      builder: ((context) => AlertDialog(
+              title: Text(
+                'Edit Contact',
+                style: roboto.copyWith(fontSize: 20),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    controller: newName,
+                    decoration: InputDecoration(
+                      filled: true,
+                      labelText: name,
+                      hintText: 'New Name',
+                    ),
+                    //  name validator handler
+                    validator: (value) {
+                      final words = value!.split(' ');
+                      if (words.length < 2) {
+                        return 'Nama harus terdiri dari 2 kata!';
+                      }
+                      for (final word in words) {
+                        if (!RegExp(r'^[A-Z][a-z]*$').hasMatch(word)) {
+                          return 'Nama harus diawali dengan kapital!';
+                        }
+                      }
+                      return null;
+                    },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    controller: newNumber,
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      filled: true,
+                      labelText: number,
+                      hintText: 'New Number',
+                    ),
+                    //  number validator handler
+                    validator: (value) {
+                      if (!RegExp(r'^0[0-9]{7,14}$').hasMatch(value!)) {
+                        return 'Nomor telepon tidak valid!';
+                      }
+                      return null;
+                    },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, false);
+                    },
+                    child: const Text('Cancel')),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, true);
+                      debugPrint(newName.text);
+                    },
+                    child: const Text('Save')),
+              ])),
+    );
+
+    if (isEdited) {
+      bool nameEdited = newName.text.isNotEmpty && newName.text != copyName;
+      bool numEdited =
+          newNumber.text.isNotEmpty && newNumber.text != copyNumber;
+
+      setState(() {
+        if (nameEdited) {
+          name = newName.text;
+        }
+
+        if (numEdited) {
+          number = newNumber.text;
+        }
+
+        int idx = contacts.indexWhere(
+            (element) => element[0] == copyName || element[1] == copyNumber);
+        contacts[idx] = [name, number];
+      });
+    }
+  }
+
+  // ---------- navbar handler ----------
+
+  Widget navBar() {
+    return NavigationBar(
+      onDestinationSelected: (int index) {
+        setState(() {
+          currentPageIndex = index;
+        });
+      },
+      // indicatorColor: Colors.transparent,
+      selectedIndex: currentPageIndex,
+      destinations: const [
+        NavigationDestination(
+            icon: Icon(
+              Icons.home_filled,
+            ),
+            label: 'Home'),
+        NavigationDestination(
+            icon: Icon(
+              Icons.view_list,
+            ),
+            label: 'Contacts'),
+      ],
+    );
+  }
+}

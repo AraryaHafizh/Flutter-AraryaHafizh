@@ -1,0 +1,24 @@
+import 'package:flutter/material.dart';
+
+Color itsBlue = const Color.fromARGB(255, 4, 53, 145);
+Color itsBlueShade = Color.fromARGB(167, 161, 194, 255);
+Color defaultBG = const Color.fromARGB(255, 237, 242, 247);
+Color white = Colors.white;
+Color black = Colors.black;
+Color lightGray = Color.fromARGB(255, 150, 159, 177);
+Color tes = Color(0xff25aff);
+
+TextStyle roboto = TextStyle(
+  fontSize: 14,
+  color: black,
+  fontFamily: 'Roboto',
+);
+
+TextStyle jakarta25 = TextStyle(
+  fontSize: 25,
+  color: black,
+  fontFamily: 'Jakarta',
+  fontWeight: FontWeight.w600,
+);
+
+
