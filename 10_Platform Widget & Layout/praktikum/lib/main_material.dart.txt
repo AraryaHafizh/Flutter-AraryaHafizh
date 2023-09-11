@@ -108,46 +108,33 @@ class _HomePageState extends State<HomePage> {
       '0812-1212-0404',
     ];
 
-    return ListView.separated(
-      padding: const EdgeInsets.symmetric(vertical: 22, horizontal: 20),
+    return ListView.builder(
       itemCount: names.length,
-      separatorBuilder: (context, index) =>
-          const SizedBox(height: 15), // Tambahkan jarak di sini
       itemBuilder: (context, index) {
-        return contactMaker(names[index], phones[index]);
+        return contactMaker(
+          names[index],
+          phones[index],
+        );
       },
     );
   }
 
   Widget contactMaker(String name, String phone) {
     String initials = name[0].toUpperCase();
-    return Row(
-      children: [
-        CircleAvatar(
-          radius: 26,
-          backgroundColor: Colors.green[400],
-          child: Text(
-            initials,
-            style: TextStyle(color: Colors.white, fontSize: 25),
-          ),
+    return ListTile(
+      leading: CircleAvatar(
+        radius: 26,
+        backgroundColor: Colors.green[400],
+        child: Text(
+          initials,
+          style: TextStyle(color: Colors.white, fontSize: 25),
         ),
-        const SizedBox(
-          width: 22,
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              name,
-              style: TextStyle(fontSize: 20),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Text(phone, style: TextStyle(color: Colors.white30, fontSize: 15)),
-          ],
-        )
-      ],
+      ),
+      title: Text(
+        name,
+        style: TextStyle(fontSize: 20),
+      ),
+      subtitle: Text(phone),
     );
   }
 
