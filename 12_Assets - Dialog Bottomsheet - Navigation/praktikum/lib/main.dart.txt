@@ -1,0 +1,726 @@
+import 'dart:io';
+
+import 'package:ararya_hafizh/12/image_gallery_data.dart';
+import 'package:flutter/services.dart';
+import 'style.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:file_picker/file_picker.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: const HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final TextEditingController _usernameInput = TextEditingController();
+  final TextEditingController _numberInput = TextEditingController();
+  final TextEditingController _dobInput = TextEditingController();
+  final TextEditingController _colorInput = TextEditingController();
+  final TextEditingController _imgInput = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  FilePickerResult? selectedFile;
+  File? selectedImage;
+  Color userColor = Colors.white;
+  int currentPageIndex = 0;
+
+  List<List<dynamic>> contacts = [
+    ['Adi Makmur', '081212345678', 'Jan 28', Color(0xffea1919), ''],
+    ['Budi Santono', '085134567665', 'Feb 13', Color(0xffffffff), ''],
+  ];
+
+  @override
+  void dispose() {
+    _usernameInput.dispose();
+    _numberInput.dispose();
+    _dobInput.dispose();
+    _colorInput.dispose();
+    _imgInput.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: <Widget>[
+        homePage(),
+        contactPage(),
+        galleryPage()
+      ][currentPageIndex],
+      bottomNavigationBar: navBar(),
+    );
+  }
+
+  // // ---------- Home Page ----------
+
+  Widget homePage() {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          greet(),
+          underLine(),
+          inputField(),
+          submitIt(),
+        ],
+      ),
+    );
+  }
+
+  // ---------- greeting for user ----------
+
+  Widget greet() {
+    return Container(
+      margin: const EdgeInsets.only(top: 81, left: 40, right: 40, bottom: 15),
+      child: Column(
+        children: [
+          Image.asset('assets/images/mobile_friendly.png'),
+          const SizedBox(height: 16),
+          Text(
+            'Create New Contacts',
+            style: roboto.copyWith(
+              fontSize: 24,
+            ),
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          Text(
+            'A dialog is a type of modal window that appears in front of app content to provide critical information, or prompt for a decision to be made. ',
+            style: roboto.copyWith(fontSize: 14),
+          )
+        ],
+      ),
+    );
+  }
+
+  // ---------- aesthetic underline ----------
+
+  Widget underLine() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 40),
+      decoration: const BoxDecoration(
+          border: Border(bottom: BorderSide(color: Colors.black26))),
+    );
+  }
+
+  // ---------- user input handler ----------
+
+  Widget inputField() {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          // Container(
+          //   margin: const EdgeInsets.only(top: 15, left: 16, right: 16),
+          //   child: TextFormField(
+          //     controller: _usernameInput,
+          //     decoration: const InputDecoration(
+          //       filled: true,
+          //       fillColor: Color.fromARGB(255, 231, 224, 236),
+          //       labelText: 'Name',
+          //       hintText: 'Insert Your Name',
+          //     ),
+          //     //  name validator handler
+          //     validator: (value) {
+          //       if (value == null || value.isEmpty) {
+          //         return 'Nama harus diisi!';
+          //       }
+          //       final words = value.split(' ');
+          //       if (words.length < 2) {
+          //         return 'Nama harus terdiri dari 2 kata!';
+          //       }
+          //       for (final word in words) {
+          //         if (!RegExp(r'^[A-Z][a-z]*$').hasMatch(word)) {
+          //           return 'Nama harus diawali dengan kapital!';
+          //         }
+          //       }
+          //       return null;
+          //     },
+          //   ),
+          // ),
+          // Container(
+          //   margin: const EdgeInsets.only(top: 15, left: 16, right: 16),
+          //   child: TextFormField(
+          //     controller: _numberInput,
+          //     keyboardType: TextInputType.phone,
+          //     decoration: const InputDecoration(
+          //       filled: true,
+          //       fillColor: Color.fromARGB(255, 231, 224, 236),
+          //       labelText: 'Nomor',
+          //       hintText: '+62 ....',
+          //     ),
+          //     //  number validator handler
+          //     validator: (value) {
+          //       if (value == null || value.isEmpty) {
+          //         return 'Nomor telepon harus diisi!';
+          //       }
+          //       if (!RegExp(r'^0[0-9]{7,14}$').hasMatch(value)) {
+          //         return 'Nomor telepon tidak valid!';
+          //       }
+          //       return null;
+          //     },
+          //   ),
+          // ),
+          // Container(
+          //   margin: const EdgeInsets.only(top: 15, left: 16, right: 16),
+          //   child: TextFormField(
+          //     controller: _dobInput,
+          //     keyboardType: TextInputType.datetime,
+          //     decoration: const InputDecoration(
+          //       filled: true,
+          //       fillColor: Color.fromARGB(255, 231, 224, 236),
+          //       labelText: 'Date of Birth',
+          //       hintText: 'day.month',
+          //     ),
+          //     //  number validator handler
+          //     validator: (value) {
+          //       if (value == null || value.isEmpty) {
+          //         return 'DoB harus diisi!';
+          //       }
+          //       return null;
+          //     },
+          //     onTap: () async {
+          //       FocusScope.of(context).requestFocus(FocusNode());
+          //       DateTime? selectedDate = await showDatePicker(
+          //         context: context,
+          //         initialDate: DateTime.now(),
+          //         firstDate: DateTime(1900),
+          //         lastDate: DateTime(2222),
+          //       );
+          //       if (selectedDate == null) return;
+          //       setState(() {
+          //         _dobInput.text = DateFormat.MMMd().format(selectedDate);
+          //       });
+          //     },
+          //   ),
+          // ),
+          // Container(
+          //   margin: const EdgeInsets.only(top: 15, left: 16, right: 16),
+          //   child: TextFormField(
+          //     controller: _colorInput,
+          //     keyboardType: TextInputType.none,
+          //     decoration: const InputDecoration(
+          //       filled: true,
+          //       fillColor: Color.fromARGB(255, 231, 224, 236),
+          //       labelText: 'Favorite Color',
+          //       hintText: '',
+          //     ),
+          //     onTap: () {
+          //       colorPickerHandler(context);
+          //       setState(() {
+          //         _colorInput.text = userColor.toString();
+          //       });
+          //     },
+          //   ),
+          // ),
+          Container(
+            margin: const EdgeInsets.only(top: 15, left: 16, right: 16),
+            child: TextFormField(
+              controller: _imgInput,
+              keyboardType: TextInputType.none,
+              decoration: const InputDecoration(
+                filled: true,
+                fillColor: Color.fromARGB(255, 231, 224, 236),
+                labelText: 'Import Image',
+                hintText: '',
+              ),
+              onTap: () async {
+                selectedFile =
+                    await FilePicker.platform.pickFiles(allowMultiple: false);
+                setState(() {
+                  selectedImage = File(selectedFile!.files.single.path!);
+                  _imgInput.text = selectedFile!.files.single.name;
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ---------- color picker handler ----------
+
+  colorPickerHandler(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Pick a color'),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: userColor,
+              onColorChanged: (Color selectedColor) {
+                setState(() {
+                  userColor = selectedColor;
+                });
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Pick!'))
+          ],
+        );
+      },
+    );
+  }
+
+  // ---------- submit button handler ----------
+
+  Widget submitIt() {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Container(
+        margin: const EdgeInsets.only(top: 15, right: 16, bottom: 15),
+        child: ElevatedButton(
+          onPressed: () {
+            storedata();
+            debugPrint(selectedImage!.path);
+            // if (_formKey.currentState!.validate()) {
+            //   storedata();
+            //   debugPrint(_usernameInput.text);
+            //   debugPrint(_numberInput.text);
+            //   debugPrint(_dobInput.text);
+            //   debugPrint(_colorInput.text);
+            // }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromARGB(255, 103, 80, 164),
+          ),
+          child: Text(
+            'Submit',
+            style: roboto.copyWith(fontSize: 14, color: white),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ---------- save user input handler ----------
+
+  void storedata() {
+    // String name = _usernameInput.text;
+    // String number = _numberInput.text;
+    // String dob = _dobInput.text;
+    // Color favColor = userColor;
+    String img = _imgInput.text;
+    setState(() {
+      // contacts.add([name, number, dob, favColor, img]);
+      // contacts.add([name, number, dob, favColor, img]);
+      // imgData.add(img);
+      imgData.add(selectedImage!.path);
+    });
+    _usernameInput.clear();
+    _numberInput.clear();
+    _dobInput.clear();
+    _colorInput.clear();
+    _imgInput.clear();
+  }
+
+  // // ---------- Contact Page ----------
+
+  Widget contactPage() {
+    return Container(
+      margin: const EdgeInsets.only(top: 81, left: 16, right: 16),
+      child: Column(
+        children: [
+          const Icon(Icons.contacts_outlined),
+          const SizedBox(height: 16),
+          Text('Contact List', style: roboto.copyWith(fontSize: 24)),
+          const SizedBox(height: 25),
+          underLine(),
+          const SizedBox(height: 25),
+          Expanded(
+            child: ListView.builder(
+              itemCount: contacts.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: contactCard(contacts[index], index),
+                );
+              },
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ---------- contact card maker ----------
+
+  Widget contactCard(data, idx) {
+    return Container(
+      margin: const EdgeInsets.only(left: 16, right: 18),
+      child: Row(
+        children: [
+          CircleAvatar(
+            child: Text(data[0][0].toUpperCase(),
+                style: roboto.copyWith(fontSize: 16)),
+          ),
+          const SizedBox(
+            width: 16,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                data[0],
+                style: roboto.copyWith(fontSize: 16),
+              ),
+              Text(
+                data[1],
+                style: roboto.copyWith(fontSize: 12),
+              ),
+              Text(
+                'DoB: ${data[2]}',
+                style: roboto.copyWith(fontSize: 12),
+              ),
+              Row(
+                children: [
+                  Text(
+                    'Favorite Color:',
+                    style: roboto.copyWith(fontSize: 12),
+                  ),
+                  const SizedBox(
+                    width: 5,
+                  ),
+                  Container(
+                    height: 15,
+                    width: 15,
+                    color: data[3],
+                  )
+                ],
+              ),
+              Text(
+                data[4],
+                style: roboto.copyWith(fontSize: 12),
+              )
+            ],
+          ),
+          const Spacer(),
+          IconButton(
+              onPressed: () {
+                editMode(data);
+              },
+              icon: Image.asset('assets/images/edit.png')),
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  contacts.removeAt(idx);
+                });
+              },
+              icon: Image.asset('assets/images/trash.png')),
+        ],
+      ),
+    );
+  }
+
+  // ---------- edit existing contact handler ----------
+
+  editMode(data) async {
+    String name = data[0];
+    String number = data[1];
+
+    String copyName = name;
+    String copyNumber = number;
+
+    TextEditingController newName = TextEditingController();
+    TextEditingController newNumber = TextEditingController();
+
+    bool isEdited = await showDialog(
+      context: context,
+      builder: ((context) => AlertDialog(
+              title: Text(
+                'Edit Contact',
+                style: roboto.copyWith(fontSize: 20),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    controller: newName,
+                    decoration: InputDecoration(
+                      filled: true,
+                      labelText: name,
+                      hintText: 'New Name',
+                    ),
+                    //  name validator handler
+                    validator: (value) {
+                      final words = value!.split(' ');
+                      if (words.length < 2) {
+                        return 'Nama harus terdiri dari 2 kata!';
+                      }
+                      for (final word in words) {
+                        if (!RegExp(r'^[A-Z][a-z]*$').hasMatch(word)) {
+                          return 'Nama harus diawali dengan kapital!';
+                        }
+                      }
+                      return null;
+                    },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    controller: newNumber,
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      filled: true,
+                      labelText: number,
+                      hintText: 'New Number',
+                    ),
+                    //  number validator handler
+                    validator: (value) {
+                      if (!RegExp(r'^0[0-9]{7,14}$').hasMatch(value!)) {
+                        return 'Nomor telepon tidak valid!';
+                      }
+                      return null;
+                    },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, false);
+                    },
+                    child: const Text('Cancel')),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, true);
+                      debugPrint(newName.text);
+                    },
+                    child: const Text('Save')),
+              ])),
+    );
+
+    if (isEdited) {
+      bool nameEdited = newName.text.isNotEmpty && newName.text != copyName;
+      bool numEdited =
+          newNumber.text.isNotEmpty && newNumber.text != copyNumber;
+
+      setState(() {
+        if (nameEdited) {
+          name = newName.text;
+        }
+
+        if (numEdited) {
+          number = newNumber.text;
+        }
+
+        int idx = contacts.indexWhere(
+            (element) => element[0] == copyName || element[1] == copyNumber);
+        contacts[idx] = [name, number];
+      });
+    }
+  }
+
+  // // ---------- Gallery Page ----------
+
+  Widget galleryPage() {
+    return Container(
+      margin: const EdgeInsets.only(top: 81, left: 16, right: 16),
+      child: Column(
+        children: [
+          const Icon(Icons.collections_outlined),
+          const SizedBox(height: 16),
+          Text('Image Gallery', style: roboto.copyWith(fontSize: 24)),
+          const SizedBox(height: 25),
+          underLine(),
+          SizedBox(
+            height: MediaQuery.of(context).size.height - 280,
+            child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    childAspectRatio: 16 / 9,
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10),
+                itemCount: imgData.length,
+                itemBuilder: (BuildContext context, index) {
+                  return showImage(imgData[index]);
+                }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ---------- image handler ----------
+
+  Widget showImage(img) {
+    return InkWell(
+        onTap: () {
+          botSheet(img);
+          debugPrint('tertekan');
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Image.file(
+            File(img),
+            fit: BoxFit.cover,
+          ),
+        ));
+  }
+
+  // ---------- bottom sheet handler ----------
+
+  Future botSheet(img) {
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+      ),
+      builder: ((context) {
+        return Container(
+          height: 730,
+          padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+          child: Column(
+            children: [
+              const Icon(Icons.drag_handle_rounded),
+              const SizedBox(height: 10),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.file(File(img)),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                'Ingin melihat gambar?',
+                style:
+                    roboto.copyWith(fontSize: 20, fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('Tidak')),
+                  TextButton(
+                      onPressed: () {
+                        SystemChrome.setPreferredOrientations(
+                            [DeviceOrientation.landscapeLeft]).then((value) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => showImageFull(img)));
+                        });
+                      },
+                      child: Text('Ya')),
+                ],
+              ),
+            ],
+          ),
+        );
+      }),
+    );
+  }
+
+  // ---------- image fullscreen ----------
+
+  Widget showImageFull(img) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.file(
+              File(img),
+              height: double.infinity,
+              width: double.infinity,
+              alignment: Alignment.center,
+            ),
+          ),
+          Align(
+            alignment: const Alignment(-1, -.9), // change .2 based on your need
+            child: IconButton(
+              onPressed: () {
+                SystemChrome.setPreferredOrientations(
+                    [DeviceOrientation.portraitUp]).then((value) {
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                  setState(() {
+                    currentPageIndex = 2;
+                  });
+                });
+              },
+              icon: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: Colors.white54,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ---------- navbar handler ----------
+
+  Widget navBar() {
+    return NavigationBar(
+      onDestinationSelected: (int index) {
+        setState(() {
+          currentPageIndex = index;
+        });
+      },
+      // indicatorColor: Colors.transparent,
+      selectedIndex: currentPageIndex,
+      destinations: const [
+        NavigationDestination(
+            icon: Icon(
+              Icons.home_outlined,
+            ),
+            selectedIcon: Icon(Icons.home),
+            label: 'Home'),
+        NavigationDestination(
+            icon: Icon(
+              Icons.view_list_outlined,
+            ),
+            selectedIcon: Icon(Icons.view_list),
+            label: 'Contacts'),
+        NavigationDestination(
+            icon: Icon(
+              Icons.image_outlined,
+            ),
+            selectedIcon: Icon(Icons.image),
+            label: 'Gallery'),
+      ],
+    );
+  }
+}
