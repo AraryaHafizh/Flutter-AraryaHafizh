@@ -167,6 +167,7 @@ class _TaskFormState extends State<TaskForm> {
         margin: const EdgeInsets.only(right: 16),
         child: ElevatedButton(
           onPressed: () {
+            // storedata(); // use this for no validation
             if (_formKey.currentState!.validate()) {
               storedata();
               debugPrint(_usernameInput.text);
@@ -233,31 +234,21 @@ class _TaskFormState extends State<TaskForm> {
   // ---------- contact card maker ----------
 
   Widget contactCard(data, idx) {
-    return Container(
-      margin: const EdgeInsets.only(left: 16, right: 18),
-      child: Row(
+    return ListTile(
+      leading: CircleAvatar(
+        child: Text(data[0][0].toUpperCase(),
+            style: roboto.copyWith(fontSize: 16)),
+      ),
+      title: Text(
+        data[0],
+        style: roboto.copyWith(fontSize: 16),
+      ),
+      subtitle: Text(
+        data[1],
+        style: roboto.copyWith(fontSize: 14),
+      ),
+      trailing: Wrap(
         children: [
-          CircleAvatar(
-            child: Text(data[0][0].toUpperCase(),
-                style: roboto.copyWith(fontSize: 16)),
-          ),
-          const SizedBox(
-            width: 16,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                data[0],
-                style: roboto.copyWith(fontSize: 16),
-              ),
-              Text(
-                data[1],
-                style: roboto.copyWith(fontSize: 14),
-              ),
-            ],
-          ),
-          const Spacer(),
           IconButton(
               onPressed: () {
                 editMode(data);
@@ -299,24 +290,26 @@ class _TaskFormState extends State<TaskForm> {
                 children: [
                   TextFormField(
                     controller: newName,
+                    onTap: () {
+                      newName.text = name;
+                    },
                     decoration: InputDecoration(
                       filled: true,
-                      labelText: name,
-                      hintText: 'New Name',
+                      labelText: 'Ubah Nama',
                     ),
-                    //  name validator handler
-                    validator: (value) {
-                      final words = value!.split(' ');
-                      if (words.length < 2) {
-                        return 'Nama harus terdiri dari 2 kata!';
-                      }
-                      for (final word in words) {
-                        if (!RegExp(r'^[A-Z][a-z]*$').hasMatch(word)) {
-                          return 'Nama harus diawali dengan kapital!';
-                        }
-                      }
-                      return null;
-                    },
+                    //  --- name validator handler ---
+                    // validator: (value) {
+                    //   final words = value!.split(' ');
+                    //   if (words.length < 2) {
+                    //     return 'Nama harus terdiri dari 2 kata!';
+                    //   }
+                    //   for (final word in words) {
+                    //     if (!RegExp(r'^[A-Z][a-z]*$').hasMatch(word)) {
+                    //       return 'Nama harus diawali dengan kapital!';
+                    //     }
+                    //   }
+                    //   return null;
+                    // },
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                   ),
                   const SizedBox(
@@ -324,19 +317,21 @@ class _TaskFormState extends State<TaskForm> {
                   ),
                   TextFormField(
                     controller: newNumber,
+                    onTap: () {
+                      newNumber.text = number;
+                    },
                     keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
                       filled: true,
-                      labelText: number,
-                      hintText: 'New Number',
+                      labelText: 'Ubah Nomor',
                     ),
-                    //  number validator handler
-                    validator: (value) {
-                      if (!RegExp(r'^0[0-9]{7,14}$').hasMatch(value!)) {
-                        return 'Nomor telepon tidak valid!';
-                      }
-                      return null;
-                    },
+                    //  --- number validator handler ---
+                    // validator: (value) {
+                    //   if (!RegExp(r'^0[0-9]{7,14}$').hasMatch(value!)) {
+                    //     return 'Nomor telepon tidak valid!';
+                    //   }
+                    //   return null;
+                    // },
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                   ),
                 ],
