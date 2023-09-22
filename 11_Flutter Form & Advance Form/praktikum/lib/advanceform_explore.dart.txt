@@ -1,4 +1,4 @@
-import 'package:ararya_hafizh/style.dart';
+import 'package:ararya_hafizh/testing/style.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -227,9 +227,9 @@ class _HomePageState extends State<HomePage> {
                 labelText: 'Favorite Color',
                 hintText: '',
               ),
-              onTap: () {
-                colorPickerHandler(context);
-                setState(() {
+              onTap: () async {
+                await colorPickerHandler(context);
+                setState(()  {
                   _colorInput.text = userColor.toString();
                 });
               },
