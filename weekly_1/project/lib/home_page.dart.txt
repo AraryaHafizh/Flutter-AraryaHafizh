@@ -1,0 +1,121 @@
+import 'package:ararya_hafizh/weekly1/style.dart';
+import 'package:flutter/material.dart';
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  TextEditingController firstName = TextEditingController();
+  TextEditingController lastName = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController question = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Welcome Hooman!👋🏻',
+                style:
+                    lexend.copyWith(fontSize: 24, fontWeight: FontWeight.w600)),
+            const SizedBox(height: 10),
+            Text(
+                'Got a question or some feedback? Don\'t hesitate to reach out. we\'re here to assist you to the best of our abilities!',
+                style: lexend.copyWith(fontSize: 18)),
+            const SizedBox(height: 30),
+            Wrap(
+              runSpacing: 10,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: formField('First Name', firstName),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: formField('Last Name', lastName),
+                    )
+                  ],
+                ),
+                formField('Email', email),
+                formField('What can we help you with?', question, maxline: 5),
+                Align(alignment: Alignment.centerRight, child: button('Submit'))
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget formField(labelTxt, controller, {maxline}) {
+    return TextField(
+      controller: controller,
+      decoration: loginTheme.copyWith(
+          labelText: labelTxt,
+          labelStyle: lexend.copyWith(color: Colors.black45),
+          alignLabelWithHint: true),
+      maxLines: maxline ?? 1,
+    );
+  }
+
+  Widget button(label) {
+    return TextButton(
+      style: TextButton.styleFrom(
+        backgroundColor: Colors.lightBlue.shade200,
+        shape: RoundedRectangleBorder(
+            side: const BorderSide(color: Colors.black38, width: 2),
+            borderRadius: BorderRadius.circular(10)),
+      ),
+      onPressed: () {
+        userQuestions
+            .add([firstName.text, lastName.text, email.text, question.text]);
+        confirmation();
+        debugPrint(userQuestions.toString());
+      },
+      child: Text(
+        label,
+        style: lexend,
+      ),
+    );
+  }
+
+  confirmation() {
+    return showDialog(
+      context: context,
+      builder: ((context) => AlertDialog(
+            content: Container(
+              height: 200,
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.check_circle_outline_rounded,
+                    size: 90,
+                  ),
+                  const Spacer(),
+                  Text(
+                      'Thank you for reaching out. Your support means the world!',
+                      style: lexend.copyWith(fontSize: 16)),
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text('OK', style: lexend),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          )),
+    );
+  }
+}
+
+List<List<dynamic>> userQuestions = [];
