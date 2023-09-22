@@ -229,7 +229,7 @@ class _HomePageState extends State<HomePage> {
               ),
               onTap: () async {
                 await colorPickerHandler(context);
-                setState(()  {
+                setState(() {
                   _colorInput.text = userColor.toString();
                 });
               },
@@ -337,7 +337,7 @@ class _HomePageState extends State<HomePage> {
     _fileInput.clear();
   }
 
-  // ---------- show contactCard handler ----------
+  // ---------- show contact Card handler ----------
 
   Widget contactList() {
     return Container(
@@ -415,7 +415,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               Text(
-                data[4],
+                'data: ${data[4]}',
                 style: roboto.copyWith(fontSize: 12),
               )
             ],
@@ -462,10 +462,12 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   TextFormField(
                     controller: newName,
+                    onTap: () {
+                      newName.text = name;
+                    },
                     decoration: InputDecoration(
                       filled: true,
-                      labelText: name,
-                      hintText: 'New Name',
+                      labelText: 'change Name',
                     ),
                     //  name validator handler
                     validator: (value) {
@@ -487,11 +489,13 @@ class _HomePageState extends State<HomePage> {
                   ),
                   TextFormField(
                     controller: newNumber,
+                    onTap: () {
+                      newNumber.text = number;
+                    },
                     keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
                       filled: true,
-                      labelText: number,
-                      hintText: 'New Number',
+                      labelText: 'Change number',
                     ),
                     //  number validator handler
                     validator: (value) {
@@ -535,7 +539,8 @@ class _HomePageState extends State<HomePage> {
 
         int idx = contacts.indexWhere(
             (element) => element[0] == copyName || element[1] == copyNumber);
-        contacts[idx] = [name, number];
+        contacts[idx][0] = name;
+        contacts[idx][1] = number;
       });
     }
   }
