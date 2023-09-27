@@ -1,0 +1,6 @@
+import 'package:flutter/material.dart';
+
+List<List<dynamic>> contacts = [
+  ['Adi Makmur', '081212345678', 'Jan 28', const Color(0xffea1919), ''],
+  ['Budi Santono', '085134567665', 'Feb 13', const Color(0xffffffff), ''],
+];

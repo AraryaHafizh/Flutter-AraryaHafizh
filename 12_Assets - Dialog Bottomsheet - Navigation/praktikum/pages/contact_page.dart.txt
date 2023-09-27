@@ -1,0 +1,218 @@
+import 'package:ararya_hafizh/12/widget_builder.dart';
+import '../style.dart.txt';
+import 'package:flutter/material.dart';
+import 'package:ararya_hafizh/12/data/contact_data.dart';
+
+class ContactPage extends StatefulWidget {
+  const ContactPage({super.key});
+
+  @override
+  State<ContactPage> createState() => _ContactPageState();
+}
+
+class _ContactPageState extends State<ContactPage> {
+  late Future<void> loadContacts;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Container(
+        margin: const EdgeInsets.only(top: 25, left: 16, right: 16),
+        child: Column(
+          children: [
+            const Icon(Icons.contacts_outlined),
+            const SizedBox(height: 16),
+            Text('Contact List', style: roboto.copyWith(fontSize: 24)),
+            const SizedBox(height: 25),
+            underLine(),
+            const SizedBox(height: 25),
+            Expanded(
+              child: ListView.builder(
+                itemCount: contacts.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: contactCard(contacts[index], index),
+                  );
+                },
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+              ),
+            ),
+          ],
+        ),
+      ),
+      drawer: sideNav(context),
+    );
+  }
+
+  Widget contactCard(data, idx) {
+    return ListTile(
+        leading: CircleAvatar(
+          child: Text(data[0][0].toUpperCase(),
+              style: roboto.copyWith(fontSize: 16)),
+        ),
+        title: Text(
+          data[0],
+          style: roboto.copyWith(fontSize: 16),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              data[1],
+              style: roboto.copyWith(fontSize: 12),
+            ),
+            Text(
+              'DoB: ${data[2]}',
+              style: roboto.copyWith(fontSize: 12),
+            ),
+            Row(
+              children: [
+                Text(
+                  'Favorite Color:',
+                  style: roboto.copyWith(fontSize: 12),
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                Container(
+                  height: 15,
+                  width: 15,
+                  color: data[3],
+                )
+              ],
+            ),
+            Text(
+              'Selected Image: ${data[4]}',
+              style: roboto.copyWith(fontSize: 12),
+            )
+          ],
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+                onPressed: () {
+                  editMode(data);
+                },
+                icon: Image.asset('assets/images/edit.png')),
+            IconButton(
+                onPressed: () {
+                  setState(() {
+                    contacts.removeAt(idx);
+                  });
+                },
+                icon: Image.asset('assets/images/trash.png')),
+          ],
+        ));
+  }
+
+// ---------- edit existing contact handler ----------
+
+  editMode(data) async {
+    String name = data[0];
+    String number = data[1];
+
+    String copyName = name;
+    String copyNumber = number;
+
+    TextEditingController newName = TextEditingController();
+    TextEditingController newNumber = TextEditingController();
+
+    bool isEdited = await showDialog(
+      context: context,
+      builder: ((context) => AlertDialog(
+              title: Text(
+                'Edit Contact',
+                style: roboto.copyWith(fontSize: 20),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    controller: newName,
+                    onTap: () {
+                      newName.text = name;
+                    },
+                    decoration: InputDecoration(
+                      filled: true,
+                      labelText: 'Ganti Nama',
+                    ),
+                    //  --- name validator handler ---
+                    // validator: (value) {
+                    //   final words = value!.split(' ');
+                    //   if (words.length < 2) {
+                    //     return 'Nama harus terdiri dari 2 kata!';
+                    //   }
+                    //   for (final word in words) {
+                    //     if (!RegExp(r'^[A-Z][a-z]*$').hasMatch(word)) {
+                    //       return 'Nama harus diawali dengan kapital!';
+                    //     }
+                    //   }
+                    //   return null;
+                    // },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    controller: newNumber,
+                    onTap: () {
+                      newNumber.text = number;
+                    },
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      filled: true,
+                      labelText: 'Ganti Nomor',
+                    ),
+                    //  --- number validator handler ---
+                    // validator: (value) {
+                    //   if (!RegExp(r'^0[0-9]{7,14}$').hasMatch(value!)) {
+                    //     return 'Nomor telepon tidak valid!';
+                    //   }
+                    //   return null;
+                    // },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, false);
+                    },
+                    child: const Text('Cancel')),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, true);
+                      debugPrint(newName.text);
+                    },
+                    child: const Text('Save')),
+              ])),
+    );
+
+    if (isEdited) {
+      bool nameEdited = newName.text.isNotEmpty && newName.text != copyName;
+      bool numEdited =
+          newNumber.text.isNotEmpty && newNumber.text != copyNumber;
+
+      setState(() {
+        if (nameEdited) {
+          name = newName.text;
+        }
+
+        if (numEdited) {
+          number = newNumber.text;
+        }
+
+        int idx = contacts.indexWhere(
+            (element) => element[0] == copyName || element[1] == copyNumber);
+        contacts[idx][0] = name;
+        contacts[idx][1] = number;
+      });
+    }
+  }
+}

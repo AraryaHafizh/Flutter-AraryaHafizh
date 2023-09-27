@@ -1,0 +1,315 @@
+import 'dart:io';
+import 'package:ararya_hafizh/12/data/contact_data.dart';
+import 'package:ararya_hafizh/12/data/image_gallery_data.dart';
+import 'package:intl/intl.dart';
+import '../style.dart.txt';
+import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:file_picker/file_picker.dart';
+import '../widget_builder.dart.txt';
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final TextEditingController _usernameInput = TextEditingController();
+  final TextEditingController _numberInput = TextEditingController();
+  final TextEditingController _dobInput = TextEditingController();
+  final TextEditingController _colorInput = TextEditingController();
+  final TextEditingController _imgInput = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  FilePickerResult? selectedFile;
+  File? selectedImage;
+  Color userColor = Colors.white;
+
+  @override
+  void dispose() {
+    _usernameInput.dispose();
+    _numberInput.dispose();
+    _dobInput.dispose();
+    _colorInput.dispose();
+    _imgInput.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(),
+      body: homePage(),
+      drawer: sideNav(context),
+    );
+  }
+
+  // // ---------- Home Page ----------
+
+  Widget homePage() {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          greet(),
+          underLine(),
+          inputField(),
+          submitIt(),
+        ],
+      ),
+    );
+  }
+
+  // ---------- greeting for user ----------
+
+  Widget greet() {
+    return Container(
+      margin: const EdgeInsets.only(top: 25, left: 40, right: 40, bottom: 15),
+      child: Column(
+        children: [
+          Image.asset('assets/images/mobile_friendly.png'),
+          const SizedBox(height: 16),
+          Text(
+            'Create New Contacts',
+            style: roboto.copyWith(
+              fontSize: 24,
+            ),
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          Text(
+            'A dialog is a type of modal window that appears in front of app content to provide critical information, or prompt for a decision to be made. ',
+            style: roboto.copyWith(fontSize: 14),
+          )
+        ],
+      ),
+    );
+  }
+
+  // ---------- user input handler ----------
+
+  Widget inputField() {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          // ========== name field ==========
+          Container(
+            margin: const EdgeInsets.only(top: 15, left: 16, right: 16),
+            child: TextFormField(
+              controller: _usernameInput,
+              decoration: const InputDecoration(
+                filled: true,
+                fillColor: Color.fromARGB(255, 231, 224, 236),
+                labelText: 'Name',
+                hintText: 'Insert Your Name',
+              ),
+              //  name validator handler
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Nama harus diisi!';
+                }
+                final words = value.split(' ');
+                if (words.length < 2) {
+                  return 'Nama harus terdiri dari 2 kata!';
+                }
+                for (final word in words) {
+                  if (!RegExp(r'^[A-Z][a-z]*$').hasMatch(word)) {
+                    return 'Nama harus diawali dengan kapital!';
+                  }
+                }
+                return null;
+              },
+            ),
+          ),
+          // ========== phone field ==========
+          Container(
+            margin: const EdgeInsets.only(top: 15, left: 16, right: 16),
+            child: TextFormField(
+              controller: _numberInput,
+              keyboardType: TextInputType.phone,
+              decoration: const InputDecoration(
+                filled: true,
+                fillColor: Color.fromARGB(255, 231, 224, 236),
+                labelText: 'Nomor',
+                hintText: '+62 ....',
+              ),
+              //  number validator handler
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Nomor telepon harus diisi!';
+                }
+                if (!RegExp(r'^0[0-9]{7,14}$').hasMatch(value)) {
+                  return 'Nomor telepon tidak valid!';
+                }
+                return null;
+              },
+            ),
+          ),
+          // ========== DOB field ==========
+          Container(
+            margin: const EdgeInsets.only(top: 15, left: 16, right: 16),
+            child: TextFormField(
+              controller: _dobInput,
+              keyboardType: TextInputType.datetime,
+              decoration: const InputDecoration(
+                filled: true,
+                fillColor: Color.fromARGB(255, 231, 224, 236),
+                labelText: 'Date of Birth',
+                hintText: 'day.month',
+              ),
+              //  number validator handler
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'DoB harus diisi!';
+                }
+                return null;
+              },
+              onTap: () async {
+                FocusScope.of(context).requestFocus(FocusNode());
+                DateTime? selectedDate = await showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime(2222),
+                );
+                if (selectedDate == null) return;
+                setState(() {
+                  _dobInput.text = DateFormat.MMMd().format(selectedDate);
+                });
+              },
+            ),
+          ),
+          // ========== Color Picker field ==========
+          Container(
+            margin: const EdgeInsets.only(top: 15, left: 16, right: 16),
+            child: TextFormField(
+              controller: _colorInput,
+              keyboardType: TextInputType.none,
+              decoration: const InputDecoration(
+                filled: true,
+                fillColor: Color.fromARGB(255, 231, 224, 236),
+                labelText: 'Favorite Color',
+                hintText: '',
+              ),
+              onTap: () async {
+                await colorPickerHandler(context);
+                setState(() {
+                  _colorInput.text = userColor.toString();
+                });
+              },
+            ),
+          ),
+          // ========== Image field ==========
+          Container(
+            margin: const EdgeInsets.only(top: 15, left: 16, right: 16),
+            child: TextFormField(
+              controller: _imgInput,
+              keyboardType: TextInputType.none,
+              decoration: const InputDecoration(
+                filled: true,
+                fillColor: Color.fromARGB(255, 231, 224, 236),
+                labelText: 'Import Image',
+                hintText: '',
+              ),
+              onTap: () async {
+                selectedFile =
+                    await FilePicker.platform.pickFiles(allowMultiple: false);
+                setState(() {
+                  selectedImage = File(selectedFile!.files.single.path!);
+                  _imgInput.text = selectedFile!.files.single.name;
+                });
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ---------- color picker handler ----------
+
+  colorPickerHandler(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Pick a color'),
+          content: SingleChildScrollView(
+            child: ColorPicker(
+              pickerColor: userColor,
+              onColorChanged: (Color selectedColor) {
+                setState(() {
+                  userColor = selectedColor;
+                });
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Pick!'))
+          ],
+        );
+      },
+    );
+  }
+
+  // ---------- submit button handler ----------
+
+  Widget submitIt() {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Container(
+        margin: const EdgeInsets.only(top: 15, right: 16, bottom: 15),
+        child: ElevatedButton(
+          onPressed: () {
+            storedata();
+            debugPrint(selectedImage!.path);
+            // if (_formKey.currentState!.validate()) {
+            //   storedata();
+            //   debugPrint(_usernameInput.text);
+            //   debugPrint(_numberInput.text);
+            //   debugPrint(_dobInput.text);
+            //   debugPrint(_colorInput.text);
+            // }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromARGB(255, 103, 80, 164),
+          ),
+          child: Text(
+            'Submit',
+            style: roboto.copyWith(fontSize: 14, color: white),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ---------- save user input handler ----------
+
+  void storedata() {
+    String name = _usernameInput.text;
+    String number = _numberInput.text;
+    String dob = _dobInput.text;
+    Color favColor = userColor;
+    String img = _imgInput.text;
+    setState(() {
+      contacts.add([name, number, dob, favColor, img]);
+      imgData.add(selectedImage!.path);
+      debugPrint(contacts.toString());
+    });
+    _usernameInput.clear();
+    _numberInput.clear();
+    _dobInput.clear();
+    _colorInput.clear();
+    _imgInput.clear();
+  }
+
+  
+
+  }

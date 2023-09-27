@@ -1,0 +1,10 @@
+import 'dart:convert';
+import 'package:flutter/services.dart';
+
+var contactData = {};
+
+Future<void> loadDataContacts() async {
+  final String jsonContact =
+      await rootBundle.loadString('assets/data/contact_data.json');
+  contactData = json.decode(jsonContact);
+}
