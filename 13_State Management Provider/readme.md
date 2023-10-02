@@ -1,1 +1,2 @@
 # Rangkuman Hari Ini
+Pada bab ini kita belajar bagaimana menggunakan provider pada flutter. Provider merupakan package yang memudahkan kita untuk mengatur dan berbagi data di seluruh aplikasi Flutter tanpa mengirimkan data antar bagian aplikasi. Ini memungkinkan widget untuk dengan mudah mengakses data yang dibutuhkan, sehingga kita tidak perlu mengirim data berulang-ulang antar komponen. Dengan Provider, aplikasi  akan lebih responsif dan efisien, dan dapat mendeteksi perubahan data dengan mudah.
