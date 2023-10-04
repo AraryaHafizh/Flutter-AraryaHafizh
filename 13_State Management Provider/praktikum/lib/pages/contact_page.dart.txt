@@ -1,0 +1,193 @@
+import 'package:ararya_hafizh/13/builder/widget_builder.dart';
+import 'package:ararya_hafizh/13/style.dart.txt';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:ararya_hafizh/13/handler/provider_handler.dart';
+
+class ContactPage extends StatefulWidget {
+  const ContactPage({super.key});
+
+  @override
+  State<ContactPage> createState() => _ContactPageState();
+}
+
+class _ContactPageState extends State<ContactPage> {
+  late Future<void> loadContacts;
+
+  @override
+  Widget build(BuildContext context) {
+    final contactsProvider = Provider.of<ContactsProvider>(context);
+    return Scaffold(
+      appBar: AppBar(),
+      body: Container(
+        margin: const EdgeInsets.only(top: 25, left: 16, right: 16),
+        child: Column(
+          children: [
+            const Icon(Icons.contacts_outlined),
+            const SizedBox(height: 16),
+            Text('Contact List', style: roboto.copyWith(fontSize: 24)),
+            const SizedBox(height: 25),
+            underLine(),
+            const SizedBox(height: 25),
+            Expanded(
+              child: ListView.builder(
+                itemCount: contactsProvider.contacts.length,
+                itemBuilder: (context, index) {
+                  final contact = contactsProvider.contacts[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: contactCard(contact, index),
+                  );
+                },
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+              ),
+            ),
+          ],
+        ),
+      ),
+      drawer: sideNav(context),
+    );
+  }
+
+  Widget contactCard(data, idx) {
+    final contactsProvider = Provider.of<ContactsProvider>(context);
+    return ListTile(
+        leading: CircleAvatar(
+          child: Text(data.name[0].toUpperCase(),
+              style: roboto.copyWith(fontSize: 16)),
+        ),
+        title: Text(
+          data.name,
+          style: roboto.copyWith(fontSize: 16),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              data.phoneNumber,
+              style: roboto.copyWith(fontSize: 12),
+            ),
+            Text(
+              'DoB: ${data.date}',
+              style: roboto.copyWith(fontSize: 12),
+            ),
+            Row(
+              children: [
+                Text(
+                  'Favorite Color:',
+                  style: roboto.copyWith(fontSize: 12),
+                ),
+                const SizedBox(
+                  width: 5,
+                ),
+                Container(
+                  height: 15,
+                  width: 15,
+                  color: data.color,
+                )
+              ],
+            ),
+            Text(
+              'Selected Image: ${data.imgpath}',
+              style: roboto.copyWith(fontSize: 12),
+            )
+          ],
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+                onPressed: () {
+                  editMode(data, idx);
+                },
+                icon: Image.asset('assets/images/edit.png')),
+            IconButton(
+                onPressed: () {
+                  setState(() {
+                    contactsProvider.delContact(idx);
+                  });
+                },
+                icon: Image.asset('assets/images/trash.png')),
+          ],
+        ));
+  }
+
+// ---------- edit existing contact handler ----------
+
+  editMode(data, idx) async {
+    String name = data.name;
+    String number = data.phoneNumber;
+
+    String copyName = name;
+    String copyNumber = number;
+
+    TextEditingController newName = TextEditingController();
+    TextEditingController newNumber = TextEditingController();
+
+    bool isEdited = await showDialog(
+      context: context,
+      builder: ((context) => AlertDialog(
+              title: Text(
+                'Edit Contact',
+                style: roboto.copyWith(fontSize: 20),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    controller: newName,
+                    onTap: () {
+                      newName.text = name;
+                    },
+                    decoration: const InputDecoration(
+                      filled: true,
+                      labelText: 'Ganti Nama',
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    controller: newNumber,
+                    onTap: () {
+                      newNumber.text = number;
+                    },
+                    keyboardType: TextInputType.phone,
+                    decoration: const InputDecoration(
+                      filled: true,
+                      labelText: 'Ganti Nomor',
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, false);
+                    },
+                    child: const Text('Cancel')),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, true);
+                      // debugPrint(newName.text);
+                    },
+                    child: const Text('Save')),
+              ])),
+    );
+
+    if (isEdited) {
+      bool nameEdited = newName.text.isNotEmpty && newName.text != copyName;
+      bool numEdited =
+          newNumber.text.isNotEmpty && newNumber.text != copyNumber;
+      if (nameEdited) {
+        copyName = newName.text;
+      }
+      if (numEdited) {
+        copyNumber = newNumber.text;
+      }
+      Provider.of<ContactsProvider>(context, listen: false)
+          .editContact(idx, copyName, copyNumber);
+    }
+  }
+}

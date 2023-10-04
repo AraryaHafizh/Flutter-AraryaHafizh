@@ -1,0 +1,65 @@
+import 'package:ararya_hafizh/13/pages/contact_page.dart.txt';
+import 'package:ararya_hafizh/13/pages/gallery_page.dart.txt';
+import 'package:ararya_hafizh/13/pages/home_page.dart.txt';
+import 'package:flutter/material.dart';
+
+Widget underLine() {
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: 40),
+    decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: Colors.black26))),
+  );
+}
+
+Widget sideNav(context) {
+  return Drawer(
+    child: Container(
+      margin: EdgeInsets.symmetric(vertical: 45, horizontal: 20),
+      child: Column(
+        children: [
+          ListTile(
+            title: Text('Home'),
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => HomePage()));
+            },
+          ),
+          ListTile(
+            title: Text('Contact'),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => ContactPage()));
+            },
+          ),
+          ListTile(
+            title: Text('Gallery'),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => GalleryPage()));
+            },
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+confirmDialog(BuildContext context) {
+  return showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Form Terkirim'),
+        content: Text('Form telah berhasil terkirim.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Tutup dialog
+            },
+            child: Text('OK'),
+          ),
+        ],
+      );
+    },
+  );
+}

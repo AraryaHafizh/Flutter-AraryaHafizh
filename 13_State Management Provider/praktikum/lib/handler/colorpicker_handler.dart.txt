@@ -1,0 +1,33 @@
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:ararya_hafizh/13/handler/provider_handler.dart';
+
+
+colorPickerHandler(BuildContext context) {
+  final colorProvider = Provider.of<ColorProvider>(context, listen: false);
+
+  return showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text('Pick a color'),
+        content: SingleChildScrollView(
+          child: ColorPicker(
+            pickerColor: colorProvider.userColor,
+            onColorChanged: (Color selectedColor) {
+              colorProvider.newColor(selectedColor);
+            },
+          ),
+        ),
+        actions: [
+          TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Pick!'))
+        ],
+      );
+    },
+  );
+}

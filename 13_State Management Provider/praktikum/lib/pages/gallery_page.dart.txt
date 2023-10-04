@@ -1,0 +1,169 @@
+import 'dart:io';
+import 'package:flutter/services.dart';
+import 'package:ararya_hafizh/13/style.dart';
+import 'package:flutter/material.dart';
+import 'package:ararya_hafizh/13/builder/widget_builder.dart.txt';
+import 'package:ararya_hafizh/13/handler/provider_handler.dart';
+import 'package:provider/provider.dart';
+
+
+class GalleryPage extends StatefulWidget {
+  const GalleryPage({super.key});
+
+  @override
+  State<GalleryPage> createState() => _GalleryPageState();
+}
+
+class _GalleryPageState extends State<GalleryPage> {
+  @override
+  Widget build(BuildContext context) {
+    final imageProvider = Provider.of<ImagesProvider>(context);
+    return Scaffold(
+      appBar: AppBar(),
+      body: Container(
+        margin: const EdgeInsets.only(top: 25, left: 16, right: 16),
+        child: Column(
+          children: [
+            const Icon(Icons.collections_outlined),
+            const SizedBox(height: 16),
+            Text('Image Gallery', style: roboto.copyWith(fontSize: 24)),
+            const SizedBox(height: 25),
+            underLine(),
+            const SizedBox(height: 25),
+            SizedBox(
+              height: MediaQuery.of(context).size.height - 280,
+              child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      childAspectRatio: 16 / 9,
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10),
+                  itemCount: imageProvider.imagePaths.length,
+                  itemBuilder: (BuildContext context, index) {
+                    final images = imageProvider.imagePaths[index];
+                    return showImage(images);
+                  }),
+            ),
+          ],
+        ),
+      ),
+      drawer: sideNav(context),
+    );
+  }
+  // ---------- image handler ----------
+
+  Widget showImage(img) {
+    return InkWell(
+        onTap: () {
+          botSheet(img);
+          debugPrint('tertekan');
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Image.file(
+            File(img),
+            fit: BoxFit.cover,
+          ),
+        ));
+  }
+
+  // ---------- bottom sheet handler ----------
+
+  Future botSheet(img) {
+    return showModalBottomSheet(
+      showDragHandle: true,
+      context: context,
+      isScrollControlled: true,
+      isDismissible: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+      ),
+      builder: ((context) {
+        return Container(
+          height: 730,
+          padding: const EdgeInsets.only(top: 10, left: 20, right: 20),
+          child: Column(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.file(File(img)),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                'Ingin melihat gambar?',
+                style:
+                    roboto.copyWith(fontSize: 20, fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text('Tidak')),
+                  TextButton(
+                      onPressed: () {
+                        SystemChrome.setPreferredOrientations(
+                            [DeviceOrientation.landscapeLeft]).then((value) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => showImageFull(img)));
+                        });
+                      },
+                      child: Text('Ya')),
+                ],
+              ),
+            ],
+          ),
+        );
+      }),
+    );
+  }
+
+  // ---------- image fullscreen ----------
+
+  Widget showImageFull(img) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: Image.file(
+              File(img),
+              height: double.infinity,
+              width: double.infinity,
+              alignment: Alignment.center,
+            ),
+          ),
+          Align(
+            alignment: const Alignment(-1, -.9), // change .2 based on your need
+            child: IconButton(
+              onPressed: () {
+                SystemChrome.setPreferredOrientations(
+                    [DeviceOrientation.portraitUp]).then((value) {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => GalleryPage()));
+                });
+
+                // SystemChrome.setPreferredOrientations(
+                //     [DeviceOrientation.portraitUp]).then((value) {
+                //   Navigator.popUntil(context, (route) => route.isFirst);
+                //   setState(() {
+                //     // currentPageIndex = 2;
+                //   });
+                // });
+              },
+              icon: const Icon(
+                Icons.arrow_back_ios_new_rounded,
+                color: Colors.white54,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

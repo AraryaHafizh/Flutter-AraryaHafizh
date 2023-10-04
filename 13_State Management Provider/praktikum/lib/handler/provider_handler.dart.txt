@@ -1,0 +1,88 @@
+import 'package:flutter/material.dart';
+
+class Contact {
+  final String name;
+  final String phoneNumber;
+  final String date;
+  final Color color;
+  final String imgpath;
+
+  Contact({
+    required this.name,
+    required this.phoneNumber,
+    required this.date,
+    required this.color,
+    required this.imgpath,
+  });
+}
+
+// Contacts Provider
+
+class ContactsProvider with ChangeNotifier {
+  final List<Contact> _contacts = [
+    Contact(
+      name: 'Adi Makmur',
+      phoneNumber: '081212345678',
+      date: 'Jan 28',
+      color: const Color(0xffea1919),
+      imgpath: '',
+    ),
+    Contact(
+      name: 'Budi Santono',
+      phoneNumber: '085134567665',
+      date: 'Feb 13',
+      color: const Color(0xffffffff),
+      imgpath: '',
+    ),
+  ];
+
+  List<Contact> get contacts => _contacts;
+
+  void addContact(Contact data) {
+    _contacts.add(data);
+    notifyListeners();
+  }
+
+  void delContact(int idx) {
+    _contacts.removeAt(idx);
+    notifyListeners();
+  }
+
+  void editContact(int idx, String newName, String newNumber) {
+    if (idx >= 0 && idx < _contacts.length) {
+      _contacts[idx] = Contact(
+          name: newName,
+          phoneNumber: newNumber,
+          date: _contacts[idx].date,
+          color: _contacts[idx].color,
+          imgpath: _contacts[idx].imgpath);
+    }
+    notifyListeners();
+  }
+}
+
+// Image Provider
+
+class ImagesProvider with ChangeNotifier {
+  final List<String> _images = [
+    '/data/user/0/com.example.ararya_hafizh/cache/file_picker/pdi.jpg',
+  ];
+
+  List<String> get imagePaths => _images;
+
+  void addImagePath(String imagePath) {
+    _images.add(imagePath);
+    notifyListeners();
+  }
+}
+
+// Color Provider
+
+class ColorProvider with ChangeNotifier {
+  Color _userColor = Colors.white;
+  Color get userColor => _userColor;
+  void newColor(Color color) {
+    _userColor = color;
+    notifyListeners();
+  }
+}
