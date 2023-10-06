@@ -1,1 +1,3 @@
 # Rangkuman Hari Ini
+
+Pada bab ini kita belajar mengenai REST API. REST API adalah alat yang menggunakan metode HTTP untuk menghubungkan aplikasi, mengatur jalannya data di internet. DIO adalah HTTP Client yang memudahkan akses REST API, sementara serialisasi JSON adalah cara mengubah objek data ke format JSON. Semua ini kunci dalam mengembangkan aplikasi yang dapat berkomunikasi dengan layanan melalui HTTP dan mengelola data JSON.
