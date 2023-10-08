@@ -2,4 +2,5 @@
 Output dari program seperti dibawah:
 
 
-<img src="https://github.com/AraryaHafizh/Flutter-AraryaHafizh/assets/100250840/41a11b1f-22c7-49a2-9125-40d98fec4c48" width="250" height="500" />
+
+![15-storage](https://github.com/AraryaHafizh/Flutter-AraryaHafizh/assets/100250840/38b93541-a034-42ff-a766-891896737542)
