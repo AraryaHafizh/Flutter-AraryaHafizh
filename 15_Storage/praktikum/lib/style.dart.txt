@@ -1,0 +1,38 @@
+import 'package:flutter/material.dart';
+
+Color itsBlue = const Color.fromARGB(255, 4, 53, 145);
+Color itsBlueShade = Color.fromARGB(167, 161, 194, 255);
+Color defaultBG = const Color.fromARGB(255, 237, 242, 247);
+Color white = Colors.white;
+Color black = Colors.black;
+Color lightGray = Color.fromARGB(255, 150, 159, 177);
+Color tes = Color(0xff25aff);
+
+InputDecoration fieldTheme = const InputDecoration(
+  filled: true,
+  fillColor: Color.fromARGB(166, 231, 224, 236),
+  enabledBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(5)),
+    borderSide: BorderSide(width: 25, color: Colors.transparent),
+  ),
+  focusedBorder: OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(5)),
+    borderSide: BorderSide(width: 25, color: Colors.transparent),
+  ),
+  contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+);
+
+TextStyle roboto = TextStyle(
+  fontSize: 14,
+  color: black,
+  fontFamily: 'Roboto',
+);
+
+TextStyle jakarta25 = TextStyle(
+  fontSize: 25,
+  color: black,
+  fontFamily: 'Jakarta',
+  fontWeight: FontWeight.w600,
+);
+
+
