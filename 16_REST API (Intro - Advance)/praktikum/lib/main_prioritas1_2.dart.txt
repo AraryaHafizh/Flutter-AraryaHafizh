@@ -1,0 +1,63 @@
+import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+      ),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('PUT Request Example'),
+        ),
+        body: Center(
+          child: ElevatedButton(
+            onPressed: () {
+              performPutRequest();
+            },
+            child: Text('Kirim PUT Request'),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+void performPutRequest() async {
+  Dio dio = Dio();
+
+  // Definisikan URL endpoint
+  String url = 'https://jsonplaceholder.typicode.com/posts/1';
+
+  // Data yang akan dikirim dalam request body
+  Map<String, dynamic> data = {
+    'id': 1,
+    'title': 'foo',
+    'body': 'bar',
+    'userId': 1,
+  };
+
+  try {
+    // Lakukan PUT request
+    Response response = await dio.put(url, data: data);
+    Response response_get = await dio.get(url, data: data);
+
+    // Cek jika response status code adalah 200 (OK)
+    if (response.statusCode == 200) {
+      print('PUT Request Berhasil');
+      print('Response Data: ${response.data}');
+      print(response_get);
+    } else {
+      print('PUT Request Gagal');
+    }
+  } catch (error) {
+    print('Terjadi Kesalahan: $error');
+  }
+}

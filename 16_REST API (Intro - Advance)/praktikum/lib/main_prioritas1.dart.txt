@@ -1,0 +1,48 @@
+import 'package:dio/dio.dart';
+
+class Contact {
+  final String name;
+  final String phone;
+
+  Contact({
+    required this.name,
+    required this.phone,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'phone': phone,
+    };
+  }
+}
+
+Future<void> postContact(Contact contact) async {
+  final dio = Dio();
+  final url =
+      'https://my-json-server.typicode.com/hadihammurabi/flutter-webservice/contacts';
+
+  try {
+    final response = await dio.post(url, data: contact.toJson());
+    final response_get = await dio.get(url, data: contact.toJson());
+
+    if (response.statusCode == 201) {
+      print('Data berhasil dikirim.');
+      print('Response: ${response.data}');
+      print(response_get);
+    } else {
+      print('Gagal mengirim data.');
+    }
+  } catch (e) {
+    print('Terjadi kesalahan: $e');
+  }
+}
+
+void main() {
+  final newContact = Contact(
+    name: 'john doe',
+    phone: '081212345678',
+  );
+
+  postContact(newContact);
+}
