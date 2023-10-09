@@ -1,1 +1,2 @@
 # Rangkuman Hari Ini
+Pada bab ini kita belajar bagaimana memanfaatkan AI untuk membantu kita dalam membangun aplikasi dengan baik dan benar. Kita akan menggunakan API dari OpenAI untuk pembelajaran kali ini.
