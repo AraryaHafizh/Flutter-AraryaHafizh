@@ -1,1 +1,3 @@
 # Rangkuman Hari Ini
+
+Pada bab ini kita belajar bagaimana melakukan UI testing. UI testing adalah proses pengujian antarmuka pengguna (UI) untuk memastikan kualitas, fungsionalitas, usability, accessibility, dan desain visual aplikasi. Pada Flutter, UI Testing dilakukan dengan menulis script yang dapat dijalankan otomatis. Manfaat dari UI Testing adalah menangkap bug, agar meningkatkan kualitas aplikasi yang dapat meningkatkan kepuasan user.
