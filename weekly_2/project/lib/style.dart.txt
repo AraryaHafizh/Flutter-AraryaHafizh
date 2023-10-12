@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 Color defaultBG = const Color.fromARGB(255, 255, 253, 245);
 Color white = Colors.white;
 Color black = Colors.black;
+Color purple = const Color.fromARGB(255, 78, 68, 240);
 
 InputDecoration loginTheme = InputDecoration(
   filled: true,

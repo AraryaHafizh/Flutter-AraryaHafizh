@@ -10,22 +10,24 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
+  int currentPageIdx = 0;
   TextEditingController name = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController message = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Image.asset(
-            'assets/images/alterra_logo.png',
-            width: 75,
-            height: 75,
-          ),
+      appBar: AppBar(
+        title: Image.asset(
+          'assets/images/alterra_logo.png',
+          width: 75,
+          height: 75,
         ),
-        body: bodyPage(),
-        endDrawer: drawer());
+      ),
+      body: bodyPage(),
+      endDrawer: drawer(),
+      bottomNavigationBar: botNav(),
+    );
   }
 
   // Side Menu handling ----------------------------------------------------------------
@@ -176,6 +178,35 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           )),
+    );
+  }
+
+  Widget botNav() {
+    return NavigationBar(
+      indicatorColor: Colors.transparent,
+      onDestinationSelected: (int index) {
+        setState(() {
+          currentPageIdx = index;
+        });
+      },
+      labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
+      selectedIndex: currentPageIdx,
+      destinations: <Widget>[
+        NavigationDestination(
+            selectedIcon: Icon(
+              Icons.home_outlined,
+              color: purple,
+            ),
+            icon: const Icon(Icons.home_outlined),
+            label: 'Home'),
+        NavigationDestination(
+            selectedIcon: Icon(
+              Icons.home_outlined,
+              color: purple,
+            ),
+            icon: const Icon(Icons.home_outlined),
+            label: 'Home'),
+      ],
     );
   }
 }
