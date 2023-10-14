@@ -1,0 +1,32 @@
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:ararya_hafizh/18/taskform.dart.txt';
+
+void main() {
+  group("halaman contact", () {
+    testWidgets("Widget Rendering Test", (WidgetTester tester) async {
+      await tester.pumpWidget(const MaterialApp(home: TaskForm()));
+      // Mencari judul
+      expect(find.text('Contacts'), findsOneWidget);
+      // Mencari icon dan gambar di homePage
+      expect(find.byKey(const Key('contact_image')), findsNWidgets(2));
+      // Mencari title pada homepage
+      expect(find.text("Create New Contacts"), findsOneWidget);
+      // Mencari deskripsi
+      expect(
+          find.text(
+              "A dialog is a type of modal window that appears in front of app content to provide critical information, or prompt for a decision to be made. "),
+          findsOneWidget);
+      // Mencari form untuk memasukkan nama contact dan nomor
+      expect(find.byType(TextFormField), findsNWidgets(2));
+      // Mencari tombol submit
+      expect(find.byType(ElevatedButton), findsOneWidget);
+      // Mencari title pada list contact
+      expect(find.text("List Contacts"), findsOneWidget);
+      // Mencari list contact
+      expect(find.byType(ListTile), findsOneWidget);
+    });
+  });
+}

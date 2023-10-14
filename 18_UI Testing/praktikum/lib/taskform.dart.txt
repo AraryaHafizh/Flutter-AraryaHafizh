@@ -1,0 +1,379 @@
+import 'package:ararya_hafizh/18/style.dart';
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: const TaskForm(),
+    );
+  }
+}
+
+class TaskForm extends StatefulWidget {
+  const TaskForm({super.key});
+
+  @override
+  State<TaskForm> createState() => _TaskFormState();
+}
+
+class _TaskFormState extends State<TaskForm> {
+  final TextEditingController _usernameInput = TextEditingController();
+  final TextEditingController _numberInput = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  List<List<String>> contacts = [
+    ['Adi Makmur', '081212345678'],
+  ];
+
+  @override
+  void dispose() {
+    _usernameInput.dispose();
+    _numberInput.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        leading: Image.asset('assets/images/mobile_friendly.png', key: const Key('contact_image')),
+        title: const Text('Contacts'),
+      ),
+      body: Column(
+        children: [
+          greet(),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 40),
+            decoration: const BoxDecoration(
+                border: Border(bottom: BorderSide(color: Colors.black26))),
+          ),
+          inputField(),
+          submitIt(),
+          contactList(),
+        ],
+      ),
+    );
+  }
+
+  // ---------- greeting for user ----------
+
+  Widget greet() {
+    return Container(
+      margin: const EdgeInsets.only(top: 81, left: 40, right: 40, bottom: 15),
+      child: Column(
+        children: [
+          Image.asset('assets/images/mobile_friendly.png',
+              key: const Key('contact_image')),
+          const SizedBox(
+            height: 16,
+          ),
+          Text(
+            'Create New Contacts',
+            style: roboto.copyWith(
+              fontSize: 24,
+            ),
+          ),
+          const SizedBox(
+            height: 16,
+          ),
+          Text(
+            'A dialog is a type of modal window that appears in front of app content to provide critical information, or prompt for a decision to be made. ',
+            style: roboto.copyWith(fontSize: 14),
+          )
+        ],
+      ),
+    );
+  }
+
+  // ---------- user input handler ----------
+
+  Widget inputField() {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(top: 15, left: 16, right: 16),
+            child: TextFormField(
+              controller: _usernameInput,
+              decoration: const InputDecoration(
+                filled: true,
+                fillColor: Color.fromARGB(255, 231, 224, 236),
+                labelText: 'Name',
+                hintText: 'Insert Your Name',
+              ),
+              //  name validator handler
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Nama harus diisi!';
+                }
+                final words = value.split(' ');
+                if (words.length < 2) {
+                  return 'Nama harus terdiri dari 2 kata!';
+                }
+                for (final word in words) {
+                  if (!RegExp(r'^[A-Z][a-z]*$').hasMatch(word)) {
+                    return 'Nama harus diawali dengan kapital!';
+                  }
+                }
+                return null;
+              },
+            ),
+          ),
+          Container(
+            margin:
+                const EdgeInsets.only(top: 15, left: 16, right: 16, bottom: 15),
+            child: TextFormField(
+              controller: _numberInput,
+              keyboardType: TextInputType.phone,
+              decoration: const InputDecoration(
+                filled: true,
+                fillColor: Color.fromARGB(255, 231, 224, 236),
+                labelText: 'Nomor',
+                hintText: '+62 ....',
+              ),
+              //  number validator handler
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Nomor telepon harus diisi!';
+                }
+                if (!RegExp(r'^0[0-9]{7,14}$').hasMatch(value)) {
+                  return 'Nomor telepon tidak valid!';
+                }
+                return null;
+              },
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  // ---------- submit button handler ----------
+
+  Widget submitIt() {
+    return Align(
+      alignment: Alignment.centerRight,
+      child: Container(
+        margin: const EdgeInsets.only(right: 16),
+        child: ElevatedButton(
+          onPressed: () {
+            // storedata(); // use this for no validation
+            if (_formKey.currentState!.validate()) {
+              storedata();
+              debugPrint(_usernameInput.text);
+              debugPrint(_numberInput.text);
+            }
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromARGB(255, 103, 80, 164),
+          ),
+          child: Text(
+            'Submit',
+            style: roboto.copyWith(fontSize: 14, color: white),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ---------- save user input handler ----------
+
+  void storedata() {
+    String name = _usernameInput.text;
+    String number = _numberInput.text;
+    setState(() {
+      contacts.add([name, number]);
+    });
+    _usernameInput.clear();
+    _numberInput.clear();
+  }
+
+  // ---------- show contactCard handler ----------
+
+  Widget contactList() {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.only(bottom: 20),
+        margin: const EdgeInsets.only(top: 49, left: 16, right: 16),
+        child: Column(
+          children: [
+            Text(
+              'List Contacts',
+              style: roboto.copyWith(fontSize: 24),
+            ),
+            const SizedBox(height: 15),
+            Expanded(
+              child: ListView.builder(
+                itemCount: contacts.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: contactCard(contacts[index], index),
+                  );
+                },
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ---------- contact card maker ----------
+
+  Widget contactCard(data, idx) {
+    return ListTile(
+      leading: CircleAvatar(
+        child: Text(data[0][0].toUpperCase(),
+            style: roboto.copyWith(fontSize: 16)),
+      ),
+      title: Text(
+        data[0],
+        style: roboto.copyWith(fontSize: 16),
+      ),
+      subtitle: Text(
+        data[1],
+        style: roboto.copyWith(fontSize: 14),
+      ),
+      trailing: Wrap(
+        children: [
+          IconButton(
+              onPressed: () {
+                editMode(data);
+              },
+              icon: Image.asset('assets/images/edit.png')),
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  contacts.removeAt(idx);
+                });
+              },
+              icon: Image.asset('assets/images/trash.png')),
+        ],
+      ),
+    );
+  }
+
+  // ---------- edit existing contact handler ----------
+
+  editMode(data) async {
+    String name = data[0];
+    String number = data[1];
+
+    String copyName = name;
+    String copyNumber = number;
+
+    TextEditingController newName = TextEditingController();
+    TextEditingController newNumber = TextEditingController();
+
+    bool isEdited = await showDialog(
+      context: context,
+      builder: ((context) => AlertDialog(
+              title: Text(
+                'Edit Contact',
+                style: roboto.copyWith(fontSize: 20),
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(
+                    controller: newName,
+                    onTap: () {
+                      newName.text = name;
+                    },
+                    decoration: InputDecoration(
+                      filled: true,
+                      labelText: 'Ubah Nama',
+                    ),
+                    //  --- name validator handler ---
+                    // validator: (value) {
+                    //   final words = value!.split(' ');
+                    //   if (words.length < 2) {
+                    //     return 'Nama harus terdiri dari 2 kata!';
+                    //   }
+                    //   for (final word in words) {
+                    //     if (!RegExp(r'^[A-Z][a-z]*$').hasMatch(word)) {
+                    //       return 'Nama harus diawali dengan kapital!';
+                    //     }
+                    //   }
+                    //   return null;
+                    // },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    controller: newNumber,
+                    onTap: () {
+                      newNumber.text = number;
+                    },
+                    keyboardType: TextInputType.phone,
+                    decoration: InputDecoration(
+                      filled: true,
+                      labelText: 'Ubah Nomor',
+                    ),
+                    //  --- number validator handler ---
+                    // validator: (value) {
+                    //   if (!RegExp(r'^0[0-9]{7,14}$').hasMatch(value!)) {
+                    //     return 'Nomor telepon tidak valid!';
+                    //   }
+                    //   return null;
+                    // },
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, false);
+                    },
+                    child: const Text('Cancel')),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pop(context, true);
+                      debugPrint(newName.text);
+                    },
+                    child: const Text('Save')),
+              ])),
+    );
+
+    if (isEdited) {
+      bool nameEdited = newName.text.isNotEmpty && newName.text != copyName;
+      bool numEdited =
+          newNumber.text.isNotEmpty && newNumber.text != copyNumber;
+
+      setState(() {
+        if (nameEdited) {
+          name = newName.text;
+        }
+
+        if (numEdited) {
+          number = newNumber.text;
+        }
+
+        int idx = contacts.indexWhere(
+            (element) => element[0] == copyName || element[1] == copyNumber);
+        contacts[idx] = [name, number];
+      });
+    }
+  }
+}
