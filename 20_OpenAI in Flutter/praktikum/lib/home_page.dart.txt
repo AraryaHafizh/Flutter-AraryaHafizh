@@ -9,7 +9,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final String apiKey = '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';
+  final String apiKey = '';
 
   TextEditingController price = TextEditingController();
   TextEditingController tier = TextEditingController();
