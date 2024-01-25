@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'package:ararya_hafizh/12/data/image_gallery_data.dart';
 import 'package:flutter/services.dart';
-import '../style.dart.txt';
+import '../../style.dart.txt';
 import 'package:flutter/material.dart';
-import '../widget_builder.dart.txt';
+import '../../widget_builder.dart.txt';
 
 class GalleryPage extends StatefulWidget {
   const GalleryPage({super.key});

@@ -36,6 +36,18 @@ dependencies:
   cupertino_icons: ^1.0.2
   file_picker: ^5.5.0
   intl: ^0.18.1
+  sliding_sheet: ^0.5.2
+  carousel_slider: ^4.2.1
+  dots_indicator: ^3.0.0
+  animations: ^2.0.8
+  provider: ^6.0.5
+  shared_preferences: ^2.2.1
+  dio: ^5.3.3
+  firebase_database: ^10.3.1
+  crypto: ^3.0.3
+  http: ^1.1.0
+  dart_ping: ^9.0.1
+  url_launcher: ^6.2.1
 
 dev_dependencies:
   flutter_test:
@@ -78,6 +90,12 @@ flutter:
     - family: Roboto
       fonts:
         - asset: assets/fonts/Roboto-Regular.ttf
+    - family: Lexend
+      fonts:
+        - asset: assets/fonts/Lexend-VariableFont_wght.ttf
+    - family: Unbound
+      fonts:
+        - asset: assets/fonts/Unbounded-VariableFont_wght.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomePageAi extends StatefulWidget {
+  const HomePageAi({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomePageAi> createState() => _HomePageAiState();
 }
 
-class _HomePageState extends State<HomePage> {
-  final String apiKey = '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';
+class _HomePageAiState extends State<HomePageAi> {
+  final String apiKey = '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';
 
   TextEditingController price = TextEditingController();
   TextEditingController tier = TextEditingController();
@@ -113,12 +113,13 @@ class _HomePageState extends State<HomePage> {
                 'messages': [
                   {
                     'role': 'system',
-                    'content': 'You are a smartphone seller specialist.'
+                    'content':
+                        'Anda adalah seorang customer service pada suatu universitas. Disini anda bekerja di universitas ITS Surabaya. Sebagai customer service anda harus mencoba menjawab pertanyaan mahasiswa, saya ingin anda menjawb dengan susunan: pembukaan-isi-penutup. untuk pembukaan berikan sapaan kepada mahasiswa dengan nama andi. untuk isi jika anda tidak bisa menjawab pertanyaan mahasiswa maka anda harus me return kalimat yang menyatakan anda tidak bisa menjawab pertanyaan tersebut disertai maaf, atau kata lainnya. Jika dapat menjawab pertanyaan jawablah dengan jelas dan to the point. untuk penutup tolong berikan \'disclaimer\' bahwa ini adalah jawaban yang di generate oleh AI, untuk informasi yang lebih akurat silahkan hubungi cs ITS, sertakan kalimat berikut: \'Kampus ITS Sukolilo - Surabaya\nEmail: humas@its.ac.id\nPhone: 031-5994251-54, 5947274, 5945472\nFax: 031-5923465, 5947845.\'.'
                   },
                   {
                     'role': 'user',
                     'content':
-                        'Berikan saya rekomendasi smartphone dengan kriteria berikut, maksimal harga dalam IDR ${price.text}, tier smartphone yang diharapkan buyer ${tier.text}, dan storage yang diharapkan buyer ${storage.text}. Jika tier smartphone diatas tier yang diharapkan dan masih masuk di kriteria harga dan storage maka masukkan juga dalam list sebagai \'recommendation\' section. Output yang diharapkan adalah: brand dan nama hp, harga, tier, besar storage, pros and cons dalam deskripsi singkat. Jika salah satu kriteria tidak terpenuhi maka beritau user bahwa dalam range harga yang dimasukkan user, dengan tier yang dimasukkan user, dan storage yang dimasukkan user tidak ditemukan. Untuk output recommendation section tampilkan brand dan nama hp, harga, tier, besar storage jika ada opsi storage lainnya tampilkan juga, deskripsi singkat pros and cons dan mengapa anda menambahkan device tersebut ke recommendation section.'
+                        'Apa saja persyaratan yang diperlukan untuk mendaftar sebagai mahasiswa baru di Universitas ITS?'
                   },
                 ],
               },

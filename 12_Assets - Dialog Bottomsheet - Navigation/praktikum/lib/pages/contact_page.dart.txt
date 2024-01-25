@@ -1,5 +1,5 @@
 import 'package:ararya_hafizh/12/widget_builder.dart';
-import '../style.dart.txt';
+import '../../style.dart.txt';
 import 'package:flutter/material.dart';
 import 'package:ararya_hafizh/12/data/contact_data.dart';
 

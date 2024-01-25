@@ -2,11 +2,11 @@ import 'dart:io';
 import 'package:ararya_hafizh/12/data/contact_data.dart';
 import 'package:ararya_hafizh/12/data/image_gallery_data.dart';
 import 'package:intl/intl.dart';
-import '../style.dart.txt';
+import '../../style.dart.txt';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:file_picker/file_picker.dart';
-import '../widget_builder.dart.txt';
+import '../../widget_builder.dart.txt';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});

@@ -1,4 +1,4 @@
-import 'package:ararya_hafizh/20/home_page.dart';
+import 'package:ararya_hafizh/wekly2/home_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,11 +15,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
+        colorSchemeSeed: Colors.amber,
         useMaterial3: true,
       ),
-      darkTheme: ThemeData.dark(),
       home: const HomePage(),
+      // home: const LoginPage(),
     );
   }
 }
